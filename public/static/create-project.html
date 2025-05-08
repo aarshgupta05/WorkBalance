@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/logo.png" sizes="128x128" type="image/png">
+    <link rel="stylesheet" href="/styles/home.css" />
+    <title>Create Project</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <img src="/images/logo.png" alt="Logo" />
+        </div>
+        <h2>Create a New Project</h2>
+      </nav>
+    </header>
+
+    <main>
+      <section class="project-form">
+        <h3>Project Details</h3>
+        <form id="projectForm" action="/submit-project" method="POST" enctype="multipart/form-data">
+          <!-- Project Title -->
+          <div class="form-group">
+            <label for="title">Project Title</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+
+          <!-- Project Description -->
+          <div class="form-group">
+            <label for="description">Project Description</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+          </div>
+
+          <!-- Project Image -->
+          <div class="form-group">
+            <label for="image">Project Image</label>
+            <input type="file" id="image" name="image" accept="image/*" required />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group">
+            <button type="submit">Create Project</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Your Company Name. All Rights Reserved.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/logo.png" sizes="128x128" type="image/png">
+    <title>Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="stylesheet" href="/styles/home.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <button class="burger" onclick="toggleMenu()" aria-label="Toggle menu">
+          <span class="burger-icon"></span>
+        </button>
+        <div class="menu">
+          <nav>
+            <a href="/home" style="animation-delay: 0.2s">Home</a>
+            <a href="/portfolio" style="animation-delay: 0.3s">Portfolio</a>
+            <a href="/services" style="animation-delay: 0.4s">Services</a>
+            <a href="/todo" style="animation-delay: 0.5s">To-do</a>
+            <a href="/contact" style="animation-delay: 0.6s">Contact</a>
+          </nav>
+        </div>
+        <h2 style="margin: 70px;">Services</h2>
+        <div class="logo">
+          <img src="/images/logo.png" alt="Logo">
+        </div>
+        <div class="settings">
+          <div class="btn-cont">
+            <button class="button" aria-label="Settings">
+              <span class="material-symbols-outlined">settings</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="no-parallax">
+        <div>
+          <h2>What We Offer</h2>
+          <p>Explore the range of services we provide to help you succeed.</p>
+        </div>
+        <img src="/images/services.svg" alt="Services Overview" />
+      </section>
+
+      <section class="parallax bg"></section>
+
+      <section class="no-parallax">
+        <div>
+          <h2>Core Services</h2>
+          <ul class="services-list">
+            <li>✅ Web Design & Development</li>
+            <li>✅ SEO Optimization</li>
+            <li>✅ Content Creation & Copywriting</li>
+            <li>✅ Social Media Marketing</li>
+            <li>✅ UI/UX Design</li>
+            <li>✅ E-commerce Solutions</li>
+          </ul>
+        </div>
+        <img src="/images/2.svg" alt="Core Services" />
+      </section>
+
+      <section class="parallax bg"></section>
+
+      <section class="no-parallax">
+        <div>
+          <h2>Why Choose Us?</h2>
+          <p>
+            With a passionate team and a results-driven mindset, we combine creativity and technology to deliver tailored solutions that drive impact.
+          </p>
+        </div>
+        <img src="/images/3.svg" alt="Why Us" />
+      </section>
+      <section class="no-parallax">
+        <div>
+          <h2>Our Services</h2>
+          <div class="services-grid">
+            <% services.forEach(service => { %>
+              <a href=".<%= service.link %>" class="service-card">
+                <h3><%= service.title %></h3>
+                <p><%= service.description %></p>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </section>      
+    </main>
+
+    <script>
+      const toggleMenu = () => document.body.classList.toggle("open");
+    </script>
+  </body>
+</html>

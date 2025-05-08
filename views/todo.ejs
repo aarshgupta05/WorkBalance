@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/logo.png" sizes="128x128" type="image/png">
+  <title>Todo Grid</title>
+  <style>
+    :root {
+      --color-background: #0c0b0f;
+      --color-primary: #007BFF;
+      --color-secondary: #e0e0e0;
+      /* --color-text: #f0e5ff; */
+      --color-text: #000;
+      --color-border: #aaa;
+      --color-hover: #0056b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+    
+    body {
+      background: var(--color-background);
+      color: var(--color-text);
+      font-family: "Euclid Circular A", "Poppins", sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      margin-top: 50px;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+      scrollbar-width: none;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 20px;
+    }
+
+    section {
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+      color: white;
+    }
+
+    h2 {
+      font-size: 30px;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 5px; /* Adjusted to give 5px space between boxes */
+        justify-items: center;
+        margin: 20px 0;
+    }
+
+
+    .grid-cell {
+      width: 350px;
+      height: 500px;
+      border: 2px dashed var(--color-border);
+      background-color: #222;
+      padding: 20px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+
+    .grid-cell.dragover {
+      border-color: var(--color-primary);
+      background-color: #e6f2ff;
+    }
+
+    .draggable-item {
+        margin: 8px;
+        padding: 12px 20px;
+        border: 1px solid var(--color-border);
+        background: linear-gradient(135deg, #9ce0bb, #cae49b); /* gradient */
+        color: #4D423E;
+        border-radius: 5px;
+        width: fit-content;
+        cursor: grab;
+        transition: transform 0.2s ease, box-shadow 0.3s;
+        user-select: none;
+        box-shadow: 0 2px 6px rgba(203, 228, 156, 0.3);
+    }
+
+    .draggable-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(203, 228, 156, 0.5);
+    }
+
+    .items-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        background: linear-gradient(135deg, #00ff95, #bbff00); /* gradient added */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: background 0.3s, transform 0.2s;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    }
+
+    button:hover {
+        background: linear-gradient(135deg, #00b362, #5dc700); /* darker on hover */
+        transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
+
+    footer p {
+      opacity: 0.5;
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 24px;
+      }
+
+      .grid-container {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .grid-cell {
+        height: 400px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 20px;
+      }
+
+      .grid-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .grid-cell {
+        height: 300px;
+      }
+
+      button {
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+
+      p {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <section>
+      <h2>Draggable Todo Grid</h2>
+      <p>📝 Double-click to rename, 🗑️ Right-click to delete, ➕ Add new items below.</p>
+
+      <div id="grid-container" class="grid-container">
+        <div>
+          <h3>Backlog</h3>
+          <div id="cell1" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" ondragleave="dragleaveHandler(event)"></div>
+        </div>
+        <div>
+          <h3>In Progress</h3>
+          <div id="cell2" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" ondragleave="dragleaveHandler(event)"></div>
+        </div>
+        <div>
+          <h3>Completed</h3>
+          <div id="cell3" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" ondragleave="dragleaveHandler(event)"></div>
+        </div>
+      </div>
+
+      <h3>Unplaced Items:</h3>
+      <div id="items-list" class="items-list" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)" ondragleave="dragleaveHandler(event)"></div>
+
+      <button onclick="addNewItem()">➕ Add New Item</button>
+    </section>
+  </main>
+
+  <script>
+    let items = <%- JSON.stringify(items) %>;
+
+    function dragstartHandler(ev) {
+      ev.dataTransfer.setData("text/plain", ev.target.id);
+    }
+
+    function dragoverHandler(ev) {
+      ev.preventDefault();
+      ev.target.classList.add("dragover");
+    }
+
+    function dragleaveHandler(ev) {
+      ev.target.classList.remove("dragover");
+    }
+
+    function dropHandler(ev) {
+      ev.preventDefault();
+      ev.target.classList.remove("dragover");
+      const id = ev.dataTransfer.getData("text/plain");
+      const item = document.getElementById(id);
+      if (item && (ev.target.classList.contains("grid-cell") || ev.target.id === "items-list")) {
+        ev.target.appendChild(item);
+        const draggedItem = items.find(i => i.id === id);
+        draggedItem.container = ev.target.id;
+        saveItemsToServer();
+      }
+    }
+
+    function renderItems() {
+      items.forEach(item => {
+        const el = document.createElement("div");
+        el.id = item.id;
+        el.textContent = item.name;
+        el.className = "draggable-item";
+        el.setAttribute("draggable", "true");
+        el.ondragstart = dragstartHandler;
+        el.ondblclick = () => renameItem(item.id);
+        el.oncontextmenu = (e) => {
+          e.preventDefault();
+          deleteItem(item.id);
+        };
+        const container = document.getElementById(item.container || "items-list");
+        container.appendChild(el);
+      });
+    }
+
+    function addNewItem() {
+      const name = prompt("Enter item name:");
+      if (!name) return;
+      const id = `item${Date.now()}`;
+      const newItem = { id, name, container: "items-list" };
+      items.push(newItem);
+      saveItemsToServer();
+      renderItems();
+
+      location.reload()
+    }
+
+    function renameItem(id) {
+      const item = items.find(i => i.id === id);
+      const newName = prompt("Rename item:", item.name);
+      if (newName) {
+        item.name = newName;
+        document.getElementById(id).textContent = newName;
+        saveItemsToServer();
+      }
+    }
+
+    function deleteItem(id) {
+      if (!confirm("Delete this item?")) return;
+      const index = items.findIndex(i => i.id === id);
+      if (index !== -1) {
+        items.splice(index, 1);
+        document.getElementById(id).remove();
+        saveItemsToServer();
+      }
+    }
+
+    function saveItemsToServer() {
+      fetch('/todo/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(items)
+      });
+    }
+
+    window.onload = renderItems;
+  </script>
+
+</body>
+</html>

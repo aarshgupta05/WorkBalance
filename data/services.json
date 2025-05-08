@@ -1,0 +1,7 @@
+[
+    { "title": "TO-DO", "description": "Organize your life, focus on what's best for you.", "link": "/todo" },
+    { "title": "SEO Optimization", "description": "Improve your site's ranking and visibility.", "link": "#" },
+    { "title": "Content Creation", "description": "Engaging blog posts, videos, and social content.", "link": "#" },
+    { "title": "Social Media Management", "description": "Grow and manage your online presence.", "link": "#" },
+    { "title": "UI/UX Design", "description": "Design interfaces that users love.", "link": "#" }
+]

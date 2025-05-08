@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Draggable Todo Grid</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      gap: 20px;
+    }
+    .grid-cell {
+      width: 200px;
+      height: 200px;
+      border: 2px dashed #aaa;
+      background: #f0f0f0;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .draggable-item {
+      padding: 8px 10px;
+      background: #ccc;
+      margin: 5px 0;
+      cursor: grab;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Draggable Items Grid</h2>
+<div id="grid-container">
+  <div id="cell1" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+  <div id="cell2" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+  <div id="cell3" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+</div>
+
+<h3>Unplaced Items</h3>
+<div id="items-list" class="grid-cell" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+
+<br>
+<button onclick="addNewItem()">Add Item</button>
+
+<script>
+let items = [];
+
+async function loadItems() {
+  const res = await fetch('/items');
+  const data = await res.json();
+  items = data || [];
+  renderItems();
+}
+
+function renderItems() {
+  const cells = {
+    cell1: document.getElementById("cell1"),
+    cell2: document.getElementById("cell2"),
+    cell3: document.getElementById("cell3"),
+    itemsList: document.getElementById("items-list")
+  };
+
+  // Clear all containers
+  for (let cell in cells) cells[cell].innerHTML = "";
+
+  // Render items
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.id = item.id;
+    div.textContent = item.name;
+    div.className = "draggable-item";
+    div.setAttribute("draggable", "true");
+    div.ondragstart = dragstartHandler;
+    div.ondblclick = () => renameItem(item.id);
+    div.oncontextmenu = (e) => {
+      e.preventDefault();
+      deleteItem(item.id);
+    };
+
+    const parent = cells[item.container] || cells.itemsList;
+    parent.appendChild(div);
+  });
+}
+
+function dragstartHandler(ev) {
+  ev.dataTransfer.setData("text/plain", ev.target.id);
+}
+
+function dragoverHandler(ev) {
+  ev.preventDefault();
+}
+
+function dropHandler(ev) {
+  ev.preventDefault();
+  const id = ev.dataTransfer.getData("text/plain");
+  const containerId = ev.target.id;
+  const item = items.find(i => i.id === id);
+  if (item) {
+    item.container = containerId;
+    saveItems();
+  }
+}
+
+function addNewItem() {
+  const name = prompt("Enter item name:");
+  if (!name) return;
+  const id = "item" + Date.now();
+  items.push({ id, name, container: "items-list" });
+  saveItems();
+}
+
+function renameItem(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  const name = prompt("Rename item:", item.name);
+  if (name) {
+    item.name = name;
+    saveItems();
+  }
+}
+
+function deleteItem(id) {
+  if (confirm("Delete this item?")) {
+    items = items.filter(i => i.id !== id);
+    saveItems();
+  }
+}
+
+async function saveItems() {
+  await fetch('/items', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(items)
+  });
+  renderItems();
+}
+
+window.onload = loadItems;
+</script>
+</body>
+</html>
