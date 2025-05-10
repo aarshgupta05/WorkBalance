@@ -112,15 +112,19 @@ app.post('/todo/save', (req, res) => {
 });
 
 app.get('/services', (req, res) => {
-  fs.readFile(path.join(__dirname, 'data', 'services.json'), 'utf8', (err, data) => {
-    if (err) {
-      console.error("Error reading services JSON:", err);
-      return res.status(500).send('Internal Server Error');
-    }
-
-    const services = JSON.parse(data); // Parse the JSON data
-    res.render('services', { services }); // Render EJS with the data
-  });
+  if (req.session.loggedIn) {
+    fs.readFile(path.join(__dirname, 'data', 'services.json'), 'utf8', (err, data) => {
+      if (err) {
+        console.error("Error reading services JSON:", err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      const services = JSON.parse(data); // Parse the JSON data
+      res.render('services', { services }); // Render EJS with the data
+    });
+  } else {
+    res.redirect('/login');
+  }
 });
 
 // Serve login page
